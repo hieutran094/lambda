@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  feed
+Transform:
+  - AWS::Serverless-2016-10-31
+Resources:
+  indexFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: app/
+      Handler: dist/handlers/index.handler
+      Runtime: nodejs12.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: A simple example includes a HTTP get method to get feed.
+      Environment:
+        Variables:
+          DB_CONNECTION: mysql
+          DB_HOST: 
+          DB_PORT: 3306
+          DB_USERNAME: 
+          DB_PASSWORD: 
+          DB_DATABASE: 
+          DB_LOGGING: false
+          TOREMASSE_HEADER: 
+          PANEL_DOMAIN: 
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+Outputs:
+  WebEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
